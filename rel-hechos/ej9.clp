@@ -1,4 +1,4 @@
-Escribe una plantilla que permita representar información sobre el juego de los
+scribe una plantilla que permita representar información sobre el juego de los
 barquitos, en el que se colocan barcos sobre una cuadrícula, indicando las
 posiciones mediante filas (letras) y columnas (números). Para cada barco hay
 que indicar:
@@ -16,5 +16,5 @@ casillas ocupadas y tipo de barco.
 (deftemplate barco
 	(slot ocupa (type INTEGER)(range 1 4)(default ?NONE))
 	(slot tipo (type SYMBOL)(allowed-values patrullera dragaminas fragata acorazado destructor portaviones))
-	(slot estado (type SYMBOL)(allowed-values indemne tocado hundido))
+	(slot estado (type SYMBOL)(allowed-values indemne tocado hundido)(default indemne))
 )
