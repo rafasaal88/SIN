@@ -10,12 +10,12 @@ trata de un gallo”.
 )
 
 (deffacts hechos
-	(animal (tipo perros)(sonido guau))
-	(animal (tipo gatos)(sonido miau))
-	(animal (tipo patos)(sonido cuack))
-	(animal (tipo vacas)(sonido muuuu))
-	(animal (tipo ovejas)(sonido beeee))
-	(animal (tipo gallos)(sonido kikiriki))
+	(animal (tipo perro)(sonido guau))
+	(animal (tipo gato)(sonido miau))
+	(animal (tipo pato)(sonido cuack))
+	(animal (tipo vaca)(sonido muuuu))
+	(animal (tipo oveja)(sonido beeee))
+	(animal (tipo gallo)(sonido kikiriki))
 )
 
 (defrule regla

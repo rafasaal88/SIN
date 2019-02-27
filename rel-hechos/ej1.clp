@@ -6,8 +6,8 @@ entero) y un valor por defecto para todos los campos excepto al nombre y a los
 apellidos.
 
 (deftemplate persona
-	(slot nombre (type STRING))
-	(slot apellidos (type STRING))
+	(slot nombre (type STRING)(default ?NONE))
+	(slot apellidos (type STRING)(default ?NONE))
 	(slot colorojos (type SYMBOL)(default marrones))
 	(slot altura (type FLOAT)(default 1.80))
 	(slot edad (type INTEGER)(default 18))
