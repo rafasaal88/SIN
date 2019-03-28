@@ -141,15 +141,157 @@ con valores numÃ©ricos, ordene sus valores de menor a mayor.
 
 )
 -----------------------------------------------------------------
+Haz un programa que resuelva el ejercicio 7 pero
+sin eliminar los hechos (dato 1), (dato 5), (dato verde)....
+(Se presupone un único hecho todos-los-datos)
 
+(deffacts hechos
+  (dato 1)
+  (dato 3)
+
+  (todos-los-datos)
+)
+
+(defrule regla
+
+	?d1 <- (todos-los-datos $?datos)
+	(dato ?x)
+	(not(exists(todos-los-datos $? ?x $?)))
+=>
+
+	(retract ?d1)
+	(assert (todos-los-datos $?datos ?x))
+
+)
 -----------------------------------------------------------------
+Haz un programa que dado un conjunto de hechos de tipo dato
+y un único valor numérico, imprima los valores numéricos
+por pantalla de menor a mayor. Vigila que el programa
+funciona correctamente incluso con la estrategia de ejecución
+de reglas Random.
 
+(deffacts hechos
+  (dato 1)
+  (dato 3)
+  (dato 9)
+  (dato 5)
+  (dato 4)
+  (dato 0)
+
+)
+
+(defrule regla
+
+	?d1 <- (dato ?x)
+	(not(exists(dato ?y&:(< ?y ?x))))
+
+=>
+	(printout t ?x crlf)
+	(retract ?d1)
+
+
+)
 -----------------------------------------------------------------
+Haz un programa que resuelva el ejercicio 9, pero que sólo
+utilice los hechos con valores numéricos y los inserte de
+forma ordenada (de menor a mayor) en el hecho todos-los-datos.
+(Se presupone un único hecho todos-los-datos)
 
+(deffacts hechos
+  (dato 1)
+  (dato 3)
+  (dato verde)
+  (dato 2)
+  (todos-los-datos)
+)
+
+(defrule regla
+	
+	?d1 <- (todos-los-datos $?datos)
+	?d2 <- (dato ?x&:(numberp ?x))
+	(not(exists(dato ?y&:(numberp ?y)&:(< ?y ?x))))
+	
+
+=>
+	(retract ?d1 ?d2)
+	(assert (todos-los-datos $?datos ?x))
+
+)
 -----------------------------------------------------------------
+Haz un programa que calcule el factorial de un número,
+de manera que ante un hecho (factorial 3), muestre por
+pantalla el mensaje “El factorial de 3 es 6”.
 
+(deffacts hecho
+	(dato 4)
+)
+
+(deffacts hecho-auxiliar
+
+	(acumulado 1)
+	(multiplicando 1)
+
+)
+
+(defrule regla
+	(dato ?x)
+	?d1 <- (multiplicando ?y)
+	?d2 <- (acumulado ?z)
+
+	
+
+	(test(>= ?x ?y))
+
+=>
+	(retract ?d1 ?d2)
+	(assert (multiplicando (+ ?y 1)))
+	(assert (acumulado (* ?z ?y)))
+	
+)
+
+(defrule regla2
+	(dato ?x)
+	(multiplicando ?y)
+	(not(test(>= ?x ?y)))
+	(acumulado ?z)
+=>
+
+	(printout t "El factorial de " ?x " es " ?z crlf)
+
+)
 -----------------------------------------------------------------
+Una planta industrial tiene diez sensores identificados
+por un código numérico entre 1 y 10. Cada sensor puede
+encontrarse en un estado correcto o incorrecto. Escribe
+una plantilla que permita representar la información relativa
+a los sensores y un conjunto de reglas que imprima un mensaje
+de advertencia si tres o más sensores se encuentran en un
+estado incorrecto. Sólo debe mostrarse un mensaje de error
+aunque haya más de tres sensores en estado incorrecto.
 
+(deftemplate sensor
+	(slot codigo (type INTEGER) (range 1 10))
+	(slot estado (allowed-values correcto incorrecto)))
+
+(deffacts hechos
+	(sensor(codigo 1)(estado incorrecto))
+	(sensor(codigo 2)(estado incorrecto))
+	(sensor(codigo 3)(estado incorrecto))
+	(sensor(codigo 4)(estado incorrecto))
+)
+
+
+(defrule regla
+	(exists
+		(sensor (codigo ?x)(estado incorrecto))
+		(sensor (codigo ?y&~?x)(estado incorrecto))
+		(sensor (codigo ?z&~?y&~?x)(estado incorrecto))
+
+	)
+=>
+
+	(printout t "Alerta, 3 o más sensores estan incorrectos" crlf)
+)
 -----------------------------------------------------------------
 
 -----------------------------------------------------------------
