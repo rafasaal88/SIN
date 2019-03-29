@@ -423,16 +423,85 @@ hechos vector con mismo nombre de vector.
 
 )
 -----------------------------------------------------------------
+Haz un programa que dado un único hecho vector con un
+número indefinido de valores numéricos, imprima el valor que se
+sitúa justo en medio, o la media de los dos valores de
+en medio.
 
+(deffacts hechos
+   (vector v1 1 3 5 )
+   (vector v2 1 3 5 2)
+   (vector v3 1 3 5 7 2 3 8)
+   (vector v4 1 3 3 4 1 5 2)
+   (vector v5 1 3 5 9)
+   (vector v6 1 3 5 7)
+ )
+
+
+(defrule regla
+	
+	(vector ?nombre $?antes ?x $?despues)
+	(test(= (length $?antes)(length $?despues)))
+
+=>
+	(printout t "El valor en medio del vector " ?nombre " es " ?x crlf)
+
+)
+
+(defrule regla-2
+	
+	(vector ?nombre $?antes ?x ?y $?despues)
+	(test(= (length $?antes)(length $?despues)))
+
+=>
+	(printout t "La media de los dos numeros centrales del vector " ?nombre " es " (/(+ ?x ?y) 2) crlf)
+
+)
 -----------------------------------------------------------------
+Haz un programa que dado un único hecho vector, detecte si sus
+valores se repiten de forma simétrica. Siempre que la salida sea correcta, puedes modificar el vector o utilizar hechos auxiliares. Lo siguiente es una posible solución entre muchas posibilidades
+(deffacts hechos
+   (vector v1 1 3 5 )
+   (vector v2 1 3 5 2)
+   (vector v3 1 3 5 7 2 3 8)
+   (vector v4 1 3 3 4 1 5 2)
+   (vector v5 1 3 5 9)
+   (vector v6 1 3 5 7 5 3 1)
+   (vector v7 1 3 5 5 3 1)
+   (vector v8 1 3 5 5 4 1)
+)
 
------------------------------------------------------------------
 
 
+(defrule detectaNoSimetrico
+	(vector ?nombre ?x $? ?y&~?x)
+	=>
+	(printout t "El vector " ?nombre " no es simétrico" crlf))
 
+(defrule continuaSimetrico
+	?h<-(vector ?nombre ?x $?medio ?x)
+	=>
+	(retract ?h)
+	(assert (vector ?nombre $?medio)))
 
+(defrule simetricoImpar
+	(vector ?nombre ?)
+	=>
+	(printout t "El vector " ?nombre " es simétrico impar" crlf))
 
-
+(defrule simetricoPar
+	(vector ?nombre)
+	=>
+	(printout t "El vector " ?nombre " es simétrico par" crlf))
 
 
 )
+-----------------------------------------------------------------
+
+
+
+
+
+
+
+
