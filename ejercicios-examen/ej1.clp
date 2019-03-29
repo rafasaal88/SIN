@@ -86,18 +86,19 @@ vector con mismo nombre de vector.
    (vector v4 1 2 3 4 5)
  )
 
-(defrule regla
+(defrule no-ordenado
+		(vector ?nombre $?)
+		(exists(vector ?nombre $? ?x ?y&:(> ?x ?y) $?))
+		
 
-	(vector ?nombre $? ?x ?y $?)
-	(test(> ?x ?y))
+	
 
 =>
 
 	(printout t "El vector " ?nombre " no esta ordenado" crlf)
 
 
-)
------------------------------------------------------------------
+)-----------------------------------------------------------------
 Haz un programa que dado un conjunto de hechos de la
 forma (dato 1), (dato 5), (dato verde)..., cree un unico hecho
 (todos-los-datos ...) con todos los valores de los hechos
@@ -293,13 +294,134 @@ aunque haya más de tres sensores en estado incorrecto.
 	(printout t "Alerta, 3 o más sensores estan incorrectos" crlf)
 )
 -----------------------------------------------------------------
+Haz un programa que dado un conjunto de hechos de tipo dato
+y un único valor numérico, imprima los valores numéricos
+por pantalla de menor a mayor. Vigila que el programa
+funciona correctamente incluso con la estrategia de ejecución
+de reglas Random.
 
+(deffacts hechos
+  (dato 1)
+  (dato 3)
+  (dato 9)
+  (dato 5)
+  (dato 4)
+  (dato 0)
+
+)
+
+(defrule regla 
+	?d1 <- (dato ?x)
+	(not(exists(dato ?y&:(< ?y ?x))))
+
+=>
+	(retract ?d1)
+	(printout t ?x crlf)
+)	
 -----------------------------------------------------------------
+Haz un programa que resuelva el ejercicio 9, pero que sólo
+utilice los hechos con valores numéricos y los inserte de
+forma ordenada (de menor a mayor) en el hecho todos-los-datos.
+(Se presupone un único hecho todos-los-datos)
 
+(deffacts hechos
+  (dato 1)
+  (dato 3)
+  (dato verde)
+  (dato 2)
+  (todos-los-datos)
+)
+
+(defrule regla
+	?d1 <- (dato ?x&:(numberp ?x))
+	?d2 <- (todos-los-datos $?datos)
+	(not(exists(dato ?y&:(numberp ?y)&:(< ?y ?x))))
+
+=>
+	(retract ?d1 ?d2)
+	(assert(todos-los-datos $?datos ?x))
+)
 -----------------------------------------------------------------
+Escribe un programa para ayudar a una persona a decidir qué plantas
+podría plantar. La siguiente tabla indica las características de una
+serie de plantas (tolerancia al frío, tolerancia a la sombra,
+tolerancia al clima seco...). La entrada al programa debe
+consistir en un conjunto de hechos
+(característica-deseada <característica>) que indiquen
+características que se desee que tenga una planta.
+El programa debe mostrar por pantalla el nombre de las plantas
+que cuenten con las características indicadas, aunque aparte de
+esas cuenten con otras características
 
+(deftemplate planta
+    (slot nombre)
+    (multislot caracteristicas))
+
+(deffacts plantas
+	(planta (nombre hortensia) (caracteristicas sombra ciudad maceta cuidado_facil crece_rapido))
+
+   	(caracteristica-deseada sombra)
+)
+
+(defrule regla
+
+	(planta (nombre ?x))
+	
+	(forall (caracteristica-deseada ?y)
+		(planta (nombre ?x)(caracteristicas $? ?y $?))
+	)
+
+=>
+
+	(printout t "Puedes sembrar " ?x crlf)
+)
 -----------------------------------------------------------------
+Complementa el ejercicio 8 para que también se detecten
+los vectores que sí están ordenados. Es decir, sin modificar los
+hechos ni crear hechos auxiliares, se debe imprimir un mensaje
+por cada vector (vector <nombreVector> <val1> ... <valN>),
+indicando si sus elementos están ordenados o no.
+Se entenderá que en la base de hechos no habrá dos
+hechos vector con mismo nombre de vector.
 
+(deffacts hechos
+   (vector v1 1 3 5 )
+   (vector v2 1 3 5 2)
+   (vector v3 1 3 5 7 2 3 8)
+   (vector v4 1 3 3 4 1 5 2)
+   (vector v5 1 3 5 9)
+   (vector v6 1 3 5 7)
+)
+
+(defrule no-ordenado
+		(vector ?nombre $?)
+		(exists(vector ?nombre $? ?x ?y&:(> ?x ?y) $?))
+		
+
+	
+
+=>
+
+	(printout t "El vector " ?nombre " no esta ordenado" crlf)
+
+
+)
+
+
+
+(defrule ordenado
+	(vector ?nombre $?)
+
+	(forall (vector ?nombre $? ?x ?y $?)
+		(test(< ?x ?y))
+	)
+
+
+=>
+	(printout t "El vector " ?nombre " esta ordenado" crlf)
+
+
+)
 -----------------------------------------------------------------
 
 -----------------------------------------------------------------
