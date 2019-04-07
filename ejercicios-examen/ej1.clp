@@ -460,6 +460,7 @@ en medio.
 -----------------------------------------------------------------
 Haz un programa que dado un único hecho vector, detecte si sus
 valores se repiten de forma simétrica. Siempre que la salida sea correcta, puedes modificar el vector o utilizar hechos auxiliares. Lo siguiente es una posible solución entre muchas posibilidades
+
 (deffacts hechos
    (vector v1 1 3 5 )
    (vector v2 1 3 5 2)
@@ -473,27 +474,53 @@ valores se repiten de forma simétrica. Siempre que la salida sea correcta, puede
 
 
 
-(defrule detectaNoSimetrico
-	(vector ?nombre ?x $? ?y&~?x)
-	=>
-	(printout t "El vector " ?nombre " no es simétrico" crlf))
 
-(defrule continuaSimetrico
-	?h<-(vector ?nombre ?x $?medio ?x)
-	=>
-	(retract ?h)
-	(assert (vector ?nombre $?medio)))
+(defrule simetrico-par
+	(vector ?nombre $?datos)
+	(test(evenp (length $?datos)))
+	(forall (vector ?nombre $?antes ?x $?mitad ?y $?despues&:(= (length $?antes)(length $?despues)))
+		(test (= ?x ?y))
+	)
 
-(defrule simetricoImpar
-	(vector ?nombre ?)
-	=>
-	(printout t "El vector " ?nombre " es simétrico impar" crlf))
+=>
+	(printout t "El vector " ?nombre " es simetrico par" crlf)
 
-(defrule simetricoPar
-	(vector ?nombre)
-	=>
-	(printout t "El vector " ?nombre " es simétrico par" crlf))
+)
 
+(defrule simetrico-impar
+	(vector ?nombre $?datos)
+	(test(oddp (length $?datos)))
+	(forall (vector ?nombre $?antes ?x $?mitad ?y $?despues&:(= (length $?antes)(length $?despues)))
+		(test (= ?x ?y))
+	)
+
+=>
+	(printout t "El vector " ?nombre " es simetrico impar" crlf)
+
+)
+
+
+(defrule nosimetrico-impar
+	(vector ?nombre $?datos)
+	(test(oddp (length $?datos)))
+	(exists(vector ?nombre $?antes ?x $?mitad ?y&~?x $?despues&:(= (length $?antes)(length $?despues)))
+		
+	)
+
+=>
+	(printout t "El vector " ?nombre " no es simetrico y es impar" crlf)
+
+)
+
+(defrule nosimetrico-par
+	(vector ?nombre $?datos)
+	(test(evenp (length $?datos)))
+	(exists(vector ?nombre $?antes ?x $?mitad ?y&~?x $?despues&:(= (length $?antes)(length $?despues)))
+		
+	)
+
+=>
+	(printout t "El vector " ?nombre " no es simetrico y es par" crlf)
 
 )
 -----------------------------------------------------------------
